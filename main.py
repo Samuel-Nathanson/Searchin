@@ -24,7 +24,8 @@ def resultpage(search):
     search_string = search.data['search']
     if search.data['search'] == 'cool website':
         testres = {'desc': 'this is a cool website', 'title': 'Cool Website', 'link': 'cornonthec.observer', 'score': 10 }
-        results = [testres]
+        testres2 = {'desc': 'this is a bad website', 'title': 'Bad Website', 'link': 'sketchy.company', 'score': 20 }
+        results = [testres, testres2]
     else:
         results = []
     #pdb.set_trace()
