@@ -966,6 +966,22 @@ legend {
   font-weight: bold;
 }
 
+.s009 form .inner-form .advance-search .search-result {
+  font-size: 20px
+}
+
+.s009 form .inner-form .advance-search .result-domain {
+  font-size: 14px
+}
+
+.s009 form .inner-form .advance-search .result-desc {
+  font-size: 14px
+}
+
+.s009 form .inner-form .advance-search .result-name a {
+  color: #72ACF9
+}
+
 .s009 form .inner-form .advance-search .row {
   display: -ms-flexbox;
   display: flex;
