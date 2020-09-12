@@ -18,16 +18,18 @@ Outputs:
 
 # input: api items
 
-#import file
-
-def getReadability(item):
-    return 50
+import metrics
+import pdb 
+def getReadabilityDistance(user_reading_level, page_reading_level, dropoff_speed):
+    x = page_reading_level - user_reading_level
+    return 2*math.exp(-math.pow(x,2)/(2*dropoff_speed))
 
 def originalIndexToRelevanceValue(index):
     return 1/(index+1)
 
-def getWeightedRelevance(original_index, readability, weight):
-    weighted_relevance = 2 * (((1-weight)*originalIndexToRelevanceValue(original_index)) + (weight*readability))
+def getWeightedRelevance(original_index, readability_distance, weight):
+    pdb.set_trace()
+    weighted_relevance = 2 * (((1-weight)*originalIndexToRelevanceValue(original_index)) + (weight*readability_distance))
     return weighted_relevance
 
 weight = 0.5
@@ -35,6 +37,6 @@ api_items = [{0: 'https://en.wikipedia.org/wiki/Coffee'}, {1: 'https://www.starb
 api_items_readability = []
 api_items_weighted_relevance = []
 for i,item in enumerate(api_items):
-    api_items_readability.append({i:getReadability(item)})
+    api_items_readability.append({i:metrics.getReadability(item)})
     api_items_weighted_relevance.append({i:getWeightedRelevance(i,api_items_readability[i][i],weight)})
 print(api_items_readability, api_items_weighted_relevance)

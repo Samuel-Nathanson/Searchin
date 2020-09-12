@@ -1,6 +1,6 @@
 import json, ast
 from googleapiclient.discovery import build
-my_api_key = "AIzaSyAvWTcAb7TLCrk2bAkO1kRPEjEAUgaE2FM"
+my_api_key = "{placeholder}"
 my_cse_id = "db4b674e75ef6e76a"
 
 def google_search(search_term, api_key, cse_id, **kwargs):
