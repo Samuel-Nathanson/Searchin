@@ -1,11 +1,34 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect
+from forms import SearchPageForm
+import pdb
 
 app = Flask(__name__)
 
-@app.route('/')
-@app.route('/index')
-def root():
-    return render_template('search.html')
+
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/search', methods=['GET', 'POST'])
+def searchpage():
+    search = SearchPageForm(request.form)
+    if request.method == 'POST':
+        return resultpage(search)
+    if not search.validate():
+        pass
+        #flash('Fill out all the required form fields.')
+    else:
+        pass
+    return render_template('search.html', form=search)
+
+@app.route('/results')
+def resultpage(search):
+
+    search_string = search.data['search']
+    if search.data['search'] == 'cool website':
+        testres = {'desc': 'this is a cool website', 'title': 'Cool Website', 'link': 'cornonthec.observer', 'score': 10 }
+        results = [testres]
+    else:
+        results = []
+    #pdb.set_trace()
+    return render_template('results.html', results=results)
     #return 'test'
 
 if __name__ == '__main__':
