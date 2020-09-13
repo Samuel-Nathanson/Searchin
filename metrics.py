@@ -1,4 +1,5 @@
 import requests
+import json
 from bs4 import BeautifulSoup
 
 """
@@ -36,8 +37,14 @@ def getReadability(url, minimum_element_length = 15, maximum_excerpt_length = 20
     except requests.exceptions.RequestException as e:
         return { "Error" : e, "Origin" : "Request to rapid API readability"}
 
+
     if response.status_code == 200:
-        return response.text
+        try:
+            readability_json = json.loads(response.text)
+            return create_composite(readability_json)
+        except Exception as e:
+            # Escalate
+            return { "Error" : response.status_code, "Origin" : "Request to rapid API readability"}
     else:
         return { "Error" : response.status_code, "Origin" : "Request to rapid API readability"}
 
@@ -80,3 +87,11 @@ def getExcerpt(url, minimum_element_length = 15, maximum_excerpt_length = 2000):
             break
 
     return excerpt
+
+def create_composite(readability_json):
+
+    composite_readability = 100 - readability_json["FLESCH_READING"]
+    composite_readability = composite_readability if composite_readability <= 100 else 100
+    composite_readability = composite_readability if composite_readability >= 0 else 0
+
+    return composite_readability
