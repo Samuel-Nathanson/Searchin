@@ -72,8 +72,3 @@ async def get_readability_scores(urls_arr):
 #     plt.plot(x_vals, y_vals)
 #     plt.show(block=True)
 #     plt.waitforbuttonpress()
-
-
-
-
-
