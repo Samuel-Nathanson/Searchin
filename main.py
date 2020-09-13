@@ -28,7 +28,7 @@ def resultpage(search):
         testres2 = {'desc': 'this is a bad website', 'title': 'Bad Website', 'link': 'sketchy.company', 'score': 20 }
         results = [testres, testres2]
     else:
-        results = search_engine.search_result_formatter(search_engine.filter_search('coffee'))
+        results = search_engine.search_result_formatter(search_engine.filter_search('coffee', float(search.data['reading_level'])))
     #pdb.set_trace()
     return render_template('results.html', results=results)
     #return 'test'

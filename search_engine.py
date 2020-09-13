@@ -9,13 +9,13 @@ def google_search(search_term, api_key, cse_id, **kwargs):
     res = service.cse().list(q=search_term, cx=cse_id, **kwargs).execute()
     return res
 
-def filter_search(query):
+def filter_search(query, reading_level):
     #result = google_search(query, my_api_key, my_cse_id)
     with open('test.json', 'r') as file:
         result = ast.literal_eval(file.read())
     result_items = [(i,x) for i,x in enumerate(result['items'])]
     api_items = [{result_item[0]:result_item[1]['link']} for result_item in result_items]
-    weighted_results = readability_sorter.getRelevance(api_items, 50)
+    weighted_results = readability_sorter.getRelevance(api_items, reading_level)
     #pdb.set_trace()
     weighted_results_reformat = [{'id':list(x)[0],'relevancy':x[list(x)[0]]} for x in weighted_results[1]]
     #pdb.set_trace()
