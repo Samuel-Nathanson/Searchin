@@ -1,6 +1,7 @@
 import requests
 import json
 from bs4 import BeautifulSoup
+import textstat
 
 """
 getReadability()
@@ -19,38 +20,15 @@ Parameters:
 Outputs:
     - Readability Score
 """
-def getReadability(url, minimum_element_length = 20, maximum_excerpt_length = 2500, minimum_excerpt_length = 100):
-
+def getReadability(url, minimum_element_length = 20, minimum_excerpt_length = 100, maximum_excerpt_length = 2500):
+    
     excerpt = getExcerpt(url, minimum_element_length = minimum_element_length, maximum_excerpt_length = maximum_excerpt_length)
 
     # Page does not have enough content to pass into readability algorithms
     if len(excerpt) < minimum_excerpt_length:
         return None
-
-    query_string = { "text" : excerpt}
-
-    # Make request to rapid api for readability metrics
-    endpoint = "https://ipeirotis-readability-metrics.p.rapidapi.com/getReadabilityMetrics"
-    payload = ""
-    headers = {
-        'x-rapidapi-host': "ipeirotis-readability-metrics.p.rapidapi.com",
-        'x-rapidapi-key': "",
-        'content-type': "application/x-www-form-urlencoded"
-    }
-
-    try:
-        response = requests.request("POST", endpoint, data=payload, headers=headers, params=query_string)
-    except requests.exceptions.RequestException as e:
-        raise e
-
-    if response.status_code == 200:
-        try:
-            readability_json = json.loads(response.text)
-            return create_composite(readability_json)
-        except Exception as e:
-            raise e
-    else:
-        response.raise_for_status()
+    
+    return textstat.text_standard(excerpt, float_output=True)
 
 """
 getExcerpt()
@@ -67,7 +45,7 @@ Parameters:
     - Default: 2000
     - Optional
 """
-def getExcerpt(url, minimum_element_length = 20, maximum_excerpt_length = 2000):
+def getExcerpt(url, minimum_element_length = 20, maximum_excerpt_length = 2500):
 
     # Get html from url
     try:
@@ -76,7 +54,7 @@ def getExcerpt(url, minimum_element_length = 20, maximum_excerpt_length = 2000):
         raise e
 
     if response.status_code == 200:
-        soup = BeautifulSoup(response.text, 'html.parser')
+        soup = BeautifulSoup(response.text, 'lxml')
     else:
         response.raise_for_status()
 
@@ -91,11 +69,3 @@ def getExcerpt(url, minimum_element_length = 20, maximum_excerpt_length = 2000):
             break
 
     return excerpt
-
-def create_composite(readability_json):
-
-    composite_readability = 90 - readability_json["FLESCH_READING"] # Bias scale toward harder
-    composite_readability = composite_readability if composite_readability <= 100 else 100
-    composite_readability = composite_readability if composite_readability >= 0 else 0
-
-    return composite_readability
