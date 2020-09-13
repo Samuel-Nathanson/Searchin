@@ -1,11 +1,13 @@
 from flask import Flask, render_template, request, redirect
 from forms import SearchPageForm
-import pdb
 import search_engine
 
 app = Flask(__name__)
 
-
+@app.route('/about')
+def about():
+    return render_template('about.html')
+    
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/search', methods=['GET', 'POST'])
 def searchpage():
@@ -19,18 +21,16 @@ def searchpage():
         pass
     return render_template('search.html', form=search)
 
+
+
 @app.route('/results')
 def resultpage(search):
 
+    #resultform = ResultsPageForm(request.form)
     search_string = search.data['search']
-    if search.data['search'] == 'cool website':
-        testres = {'desc': 'this is a cool website', 'title': 'Cool Website', 'link': 'cornonthec.observer', 'score': 10 }
-        testres2 = {'desc': 'this is a bad website', 'title': 'Bad Website', 'link': 'sketchy.company', 'score': 20 }
-        results = [testres, testres2]
-    else:
-        results = search_engine.search_result_formatter(search_engine.filter_search('coffee', float(search.data['reading_level'])))
+    results = search_engine.search_result_formatter(search_engine.filter_search('coffee', float(search.data['reading_level'])))
     #pdb.set_trace()
-    return render_template('results.html', results=results)
+    return render_template('results.html', results=results, page_number=str(int(search.data['page_number'])+1), reading_level=search.data['reading_level'], search=search.data['search'])
     #return 'test'
 
 if __name__ == '__main__':
@@ -42,7 +42,3 @@ if __name__ == '__main__':
     # http://flask.pocoo.org/docs/1.0/quickstart/#static-files. Once deployed,
     # App Engine itself will serve those files as configured in app.yaml.
     app.run(host='127.0.0.1', port=8080, debug=True)
-
-@app.route('/about')
-def about():
-    return render_template('about.html')

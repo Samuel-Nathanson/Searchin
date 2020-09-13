@@ -19,7 +19,6 @@ Outputs:
 # input: api items
 
 import metrics
-import pdb
 import math
 import requests
 
