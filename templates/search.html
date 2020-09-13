@@ -6,10 +6,72 @@
     <meta name="author" content="colorlib.com">
     <link href="https://fonts.googleapis.com/css?family=Lato:400,600,700" rel="stylesheet" />
     <link href="../static/css/main.css" rel="stylesheet" />
-  </head>
-  <body>
 
-    <div class="s009">
+    <style>
+    .topnav {
+      overflow: hidden;
+      z-index: 5000;
+      position:absolute;
+      font-family: 'Lato', sans-serif;
+      width: 100%;
+      background-color: #72ACF9;
+    }
+
+    .topnav a {
+      float: right;
+      color: #000000;
+      font-weight: bolder;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+      font-size: 20px;
+    }
+
+    .topnav a:hover {
+      color: white;
+
+    }
+
+    .topnav a.active {
+      color: white;
+    }
+
+    .topnav a:hover.active {
+      color: #6C91BF;
+    }
+
+    div.TeamLogo {
+      position: -webkit-sticky;
+      position: sticky;
+      bottom: 10px;
+      padding: 10px;
+      margin-right:10px;
+      float:right;
+      z-index: 3000;
+    }
+
+    div.SearchinOnlineLogo {
+      position: relative;
+      left:50%;
+      margin-left:-5em;
+      z-index: 3000;
+    }
+
+    </style>
+  </head>
+  <body style="background-color:#72ACF9">
+
+    <div class="topnav">
+      <a href="#contact">Contact Us</a>
+      <a href="about.html">About</a>
+      <a class="active" href="#home">Home</a>
+    </div>
+
+    <div class = "SearchinOnlineLogo">
+      <img src="static/SearchinOnlineLogo.png" alt = "SearchinOnlineLogo" width="200em">
+    </div>
+
+    <div style="position:relative; top:-30px;" class="s009">
       <form method='post' style=".form-label-left, .form-label-right, .form-label-top, label { display:none; } ">
         {% from "_formhelpers.html" import render_field %}
         <div class="inner-form">
@@ -123,5 +185,12 @@
       });
 
     </script>
+
+    <div class = "TeamLogo">
+      <img src="static/TeamLogo.png" alt = "Antisocial Engineering Logo" width="150px">
+    </div>
   </body><!-- This templates was made by Colorlib (https://colorlib.com) and stolen by god emperor toidrage -->
+
+
+
 </html>
