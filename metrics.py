@@ -1,7 +1,7 @@
 import requests
 import json
-import textstat
 from bs4 import BeautifulSoup
+import textstat
 
 """
 getReadability()
@@ -20,7 +20,7 @@ Parameters:
 Outputs:
     - Readability Score
 """
-def getReadability(url, minimum_element_length = 20, maximum_excerpt_length = 2500, minimum_excerpt_length = 100):
+def getReadability(url, minimum_element_length = 20, minimum_excerpt_length = 100, maximum_excerpt_length = 2500):
     
     excerpt = getExcerpt(url, minimum_element_length = minimum_element_length, maximum_excerpt_length = maximum_excerpt_length)
 
@@ -29,7 +29,6 @@ def getReadability(url, minimum_element_length = 20, maximum_excerpt_length = 25
         return None
     
     return textstat.text_standard(excerpt, float_output=True)
-
 
 """
 getExcerpt()
@@ -46,7 +45,7 @@ Parameters:
     - Default: 2000
     - Optional
 """
-def getExcerpt(url, minimum_element_length = 20, maximum_excerpt_length = 2000):
+def getExcerpt(url, minimum_element_length = 20, maximum_excerpt_length = 2500):
 
     # Get html from url
     try:
@@ -55,7 +54,7 @@ def getExcerpt(url, minimum_element_length = 20, maximum_excerpt_length = 2000):
         raise e
 
     if response.status_code == 200:
-        soup = BeautifulSoup(response.text, 'html.parser')
+        soup = BeautifulSoup(response.text, 'lxml')
     else:
         response.raise_for_status()
 
