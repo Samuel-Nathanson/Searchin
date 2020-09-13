@@ -36,9 +36,12 @@ def getWeightedRelevance(original_index, readability_distance, weight):
 def getRelevance(api_items, user_reading_level, weight = 0.5, dropoff_speed=200):
     api_items_readability = []
     api_items_weighted_relevance = []
-    api_items_word_counts = []
     for i,item in enumerate(api_items):
-        api_items_word_counts.append({i:len(metrics.getExcerpt(item[i]))})
-        api_items_readability.append({i:metrics.getReadability(item[i])})
-        api_items_weighted_relevance.append({i:getWeightedRelevance(i,getReadabilityDistance(user_reading_level, api_items_readability[i][i], dropoff_speed),weight)})
-    return api_items_weighted_relevance
+        try:
+            api_items_readability.append({i:metrics.getReadability(item[i])})
+            api_items_weighted_relevance.append({i:getWeightedRelevance(i,getReadabilityDistance(user_reading_level, api_items_readability[i][i], dropoff_speed),weight)})
+        except HTTPError as e:
+            api_items_readability.append({i:None})
+            api_items_weighted_relevance.append({i:0})
+    print (api_items_readability)
+    return (api_items_readability, api_items_weighted_relevance)
