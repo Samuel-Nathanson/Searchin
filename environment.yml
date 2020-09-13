@@ -1,0 +1,11 @@
+name: searchin
+# create this environment:
+#   conda env -f create environment.yml
+# conda activate searchin
+dependencies:
+  - bs4
+  - pip:
+      spacy-readability
+      Flask==1.1.2
+      wtforms==2.3.3
+
