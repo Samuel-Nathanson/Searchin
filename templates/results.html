@@ -23,14 +23,16 @@
           </div> -->
           <div class="advance-search" style="border-radius: 15px 15px 15px 15px">
             <span class="desc">RESULTS</span>
+            {% for result in results %}
             <div class="search-result">
               <div class="result-title">
-                <span class="result-name"><a href="https://stickpage.com/fun_place">Cool Website</a></span> |
-                <span class="result-reading-level" "result-reading-level-normal">10</div>
+                <span class="result-name"><a href="{{ result['link'] }}">{{ result['title'] }}</a></span> |
+                <span class="result-reading-level" "result-reading-level-normal">{{ result['score'] }}</div>
               </div>
-              <div class="result-domain">stickpage.com/fun_place</div>
-              <div class="result-desc">An example website which will come from the filtered search results later.</div>
-            </div>
+              <div class="result-domain">{{ result['link'] }}</div>
+              <div class="result-desc">{{ result['desc'] }}</div>
+              <br>
+            {% endfor %}
             <!-- <div class="row">
               <div class="input-field">
                 <div class="input-select">
