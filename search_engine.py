@@ -10,12 +10,15 @@ def google_search(search_term, api_key, cse_id, **kwargs):
     return res
 
 def filter_search(query, reading_level):
-    #result = google_search(query, my_api_key, my_cse_id)
-    with open('test.json', 'r') as file:
-        result = ast.literal_eval(file.read())
-    result_items = [(i,x) for i,x in enumerate(result['items'])]
+    result_a = google_search(query, my_api_key, my_cse_id)
+    result_b = google_search(query, my_api_key, my_cse_id, start=11)
+    #with open('test.json', 'r') as file:
+#        result = ast.literal_eval(file.read())
+    result_a_items = [(i,x) for i,x in enumerate(result_b['items'])]
+    result_b_items = [(10+i,x) for i,x in enumerate(result_a['items'])]
+    result_items = result_a_items + result_b_items
     api_items = [{result_item[0]:result_item[1]['link']} for result_item in result_items]
-    weighted_results = readability_sorter.getRelevance(api_items, reading_level)
+    weighted_results = readability_sorter.getRelevance(api_items, reading_level, dropoff_speed=100)
     #pdb.set_trace()
     weighted_results_reformat = [{'id':list(x)[0],'relevancy':x[list(x)[0]]} for x in weighted_results[1]]
     #pdb.set_trace()
@@ -49,8 +52,10 @@ def search_result_formatter(result_items):
         formatted_result['desc'] = x[1]['snippet']
         formatted_result['title'] = x[1]['title']
         formatted_result['link'] = x[1]['link']
+        formatted_result['relevancy'] = round(x[2], 2)
         formatted_result['score'] = x[3]
         results.append(formatted_result)
+    print(time.time())
     return results
 #if __name__ == '__main__':
-    search_result_formatter(filter_search('coffee'))
+    #search_result_formatter(filter_search('coffee'))
