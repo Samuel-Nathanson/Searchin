@@ -46,6 +46,13 @@ input:focus {
   color: #A9A9A9;
 }
 
+.titleHeader {
+  font-family: 'Lato', sans-serif;
+  font-size: 2em;
+  color: #383838;
+}
+
+
 /* Grouping content
    ========================================================================== */
 /**

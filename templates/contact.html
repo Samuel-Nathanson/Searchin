@@ -1,0 +1,189 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="author" content="colorlib.com">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,600,700" rel="stylesheet" />
+    <link href="../static/css/main.css" rel="stylesheet" />
+
+    <style>
+    html {
+      box-sizing: border-box;
+    }
+    *, *:before, *:after {
+      box-sizing: inherit;
+    }
+    .column {
+      float: left;
+      width: 25%;
+      margin-bottom: 16px;
+      padding: 0 8px;
+    }
+    @media screen and (max-width: 650px) {
+      .column {
+        width: 100%;
+        display: block;
+      }
+    }
+    .card {
+      position:relative;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      border-radius: 25px;
+      top: 125px;
+      color:#383838;
+      font-family: 'Lato', sans-serif;
+    }
+    .container {
+      padding: 0 16px;
+    }
+    .container::after, .row::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+    .title {
+      color: grey;
+    }
+    .button {
+      border: none;
+      outline: 0;
+      display: inline-block;
+      padding: 8px;
+      color: white;
+      background-color: #000;
+      text-align: center;
+      cursor: pointer;
+      width: 100%;
+    }
+    .button:hover {
+      background-color: #555;
+    }
+
+    .topnav {
+      overflow: hidden;
+      z-index: 5000;
+      position:absolute;
+      font-family: 'Lato', sans-serif;
+      width: 100%;
+      background-color: #72ACF9;
+    }
+    .topnav a {
+      float: right;
+      color: #000000;
+      font-weight: bolder;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+      font-size: 20px;
+    }
+    .topnav a:hover {
+      color: white;
+
+    }
+    .topnav a.active {
+      color: white;
+    }
+    .topnav a:hover.active {
+      color: #6C91BF;
+    }
+    div.TeamLogo {
+      position: -webkit-sticky;
+      position: sticky;
+      bottom: 10px;
+      padding: 10px;
+      margin-right:10px;
+      float:right;
+      z-index: 3000;
+    }
+    div.SearchinOnlineLogo {
+      position: relative;
+      left: 40%;
+      z-index: 3000;
+      padding-bottom: 30px;
+    }
+    div.titleHeader {
+      z-index: 5005;
+      position:relative;
+      top: 100px;
+    }
+
+
+    </style>
+
+  </head>
+
+  <body style="background-color:#72ACF9">
+    <div class="topnav">
+      <a class="active" href="contact">Contact Us</a>
+      <a href="about">About</a>
+      <a href="search">Home</a>
+    </div>
+
+    <div class="titleHeader">
+      <h2 style = "text-align:center;">Antisocial Engineering</h2>
+    </div>
+
+    <!-- Sam -->
+    <div class="row">
+      <div class="column">
+        <div class="card">
+          <img src="static/Sam.jpg" alt="Samuel E. Nathanson" style="width:100%">
+          <div class="container">
+            <h2>Samuel E. Nathanson<br>Humanitarian Data Scientist</h2>
+            <p class="title">Johns Hopkins University, Whiting School of Engineering</p>
+            <p></p>
+            <p>snatha11@jhu.edu</p>
+            <p><button onclick="location.href='mailto:snatha11@jhu.edu'" type="button" class ="button">Contact</button></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- John Dill -->
+      <div class="column">
+        <div class="card">
+          <img src="static/John.jpg" alt="John Dill" style="width:100%">
+          <div class="container">
+            <h2>John Dill<br>Backend Developer</h2>
+            <p class="title">Johns Hopkins University '24'</p>
+            <p></p>
+            <p>dilljjack@gmail.com</p>
+            <p><button onclick="location.href='mailto:dilljjack@gmail.com'" type="button" class ="button">Contact</button></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ricky -->
+      <div class="column">
+        <div class="card">
+          <img src="static/Ricky.png" alt="Richard Sciotti" style="width:100%">
+          <div class="container">
+            <h2>Richard Sciotti<br>Python/Cloud Engineer</h2>
+            <p class="title">Georgia Institute of Technology</p>
+            <p></p>
+            <p>rsciotti3@gatech.edu</p>
+            <p><button onclick="location.href='mailto:rsciotti3@gatech.edu'" type="button" class ="button">Contact</button></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- David -->
+      <div class="column">
+        <div class="card">
+          <img src="static/David.jpg" alt="David Hla" style="width:100%">
+          <div class="container">
+            <h2>David Hla<br>UI Developer/Operations Manager</h2>
+            <p class="title">Johns Hopkins University '24</p>
+            <p></p>
+            <p>dhla2@jhu.edu</p>
+            <p><button onclick="location.href='mailto:dhla2@jhu.edu'" type="button" class ="button">Contact</button></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class = "TeamLogo">
+      <img src="static/TeamLogo.png" alt = "Antisocial Engineering Logo" width="150px">
+    </div>
+  </body><!-- This templates was made by Colorlib (https://colorlib.com) and stolen by god emperor toidrage -->
+</html>
