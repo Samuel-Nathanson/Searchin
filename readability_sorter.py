@@ -21,6 +21,7 @@ Outputs:
 import metrics
 import pdb
 import math
+import requests
 
 def getReadabilityDistance(user_reading_level, page_reading_level, dropoff_speed):
     x = page_reading_level - user_reading_level
@@ -38,9 +39,17 @@ def getRelevance(api_items, user_reading_level, weight = 0.5, dropoff_speed=200)
     api_items_weighted_relevance = []
     for i,item in enumerate(api_items):
         try:
-            api_items_readability.append({i:metrics.getReadability(item[i])})
-            api_items_weighted_relevance.append({i:getWeightedRelevance(i,getReadabilityDistance(user_reading_level, api_items_readability[i][i], dropoff_speed),weight)})
-        except HTTPError as e:
+            item_readability = metrics.getReadability(item[i])
+            if item_readability is None:
+                #pdb.set_trace()
+                print('The page ' + item[i] + ' did not have enough content to compute a readability score.')
+                api_items_readability.append({i:None})
+                api_items_weighted_relevance.append({i:0})
+            else:
+                api_items_readability.append({i:metrics.getReadability(item[i])})
+                api_items_weighted_relevance.append({i:getWeightedRelevance(i,getReadabilityDistance(user_reading_level, api_items_readability[i][i], dropoff_speed),weight)})
+        except requests.HTTPError as e:
+            print(e)
             api_items_readability.append({i:None})
             api_items_weighted_relevance.append({i:0})
     print (api_items_readability)

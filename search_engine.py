@@ -1,6 +1,5 @@
-import json, ast, operator
+import ast, operator
 import readability_sorter
-import pdb, pprint
 from googleapiclient.discovery import build
 my_api_key = ""
 my_cse_id = "db4b674e75ef6e76a"
@@ -17,16 +16,20 @@ def filter_search(query):
     result_items = [(i,x) for i,x in enumerate(result['items'])]
     api_items = [{result_item[0]:result_item[1]['link']} for result_item in result_items]
     weighted_results = readability_sorter.getRelevance(api_items, 50)
-    pdb.set_trace()
+    #pdb.set_trace()
     weighted_results_reformat = [{'id':list(x)[0],'relevancy':x[list(x)[0]]} for x in weighted_results[1]]
+    #pdb.set_trace()
     for j,y in enumerate(weighted_results[0]):
         weighted_results_reformat[j]['reading_level'] = y[list(y)[0]]
-    for i,x in enumerate(weighted_results_reformat):
+        #pdb.set_trace()
+    '''weighted_results_temp = [x for x in weighted_results_reformat]
+    for i,x in enumerate(weighted_results_temp):
         if x['relevancy'] == 0:
-            weighted_results_reformat.remove(x)
+            weighted_results_temp.remove(x)
+    weighted_results_reformat = weighted_results_temp'''
+        #pdb.set_trace()
     #weighted_results_reformat = [{'id':list(x)[0],'relevancy':x[list(x)[0]],'reading_level':y[list(y)[0]]} for (x,y) in weighted_results if x[list(x)[0]] != None]
 
-    pdb.set_trace()
     sorted_weighted_results = sorted(weighted_results_reformat, key=operator.itemgetter('relevancy'))[::-1]
     result_items_temp = []
     for i,x in enumerate(sorted_weighted_results):
