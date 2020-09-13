@@ -1,10 +1,15 @@
 from flask import Flask, render_template, request, redirect
 from forms import SearchPageForm
-import pdb
 import search_engine
+
+
 
 app = Flask(__name__)
 
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/search', methods=['GET', 'POST'])
@@ -28,7 +33,7 @@ def resultpage(search):
         testres2 = {'desc': 'this is a bad website', 'title': 'Bad Website', 'link': 'sketchy.company', 'score': 20 }
         results = [testres, testres2]
     else:
-        results = search_engine.search_result_formatter(search_engine.filter_search('coffee', float(search.data['reading_level'])))
+        results = search_engine.search_result_formatter(search_engine.filter_search(search.data['search'], float(search.data['reading_level'])))
     #pdb.set_trace()
     return render_template('results.html', results=results)
     #return 'test'
@@ -42,7 +47,3 @@ if __name__ == '__main__':
     # http://flask.pocoo.org/docs/1.0/quickstart/#static-files. Once deployed,
     # App Engine itself will serve those files as configured in app.yaml.
     app.run(host='127.0.0.1', port=8080, debug=True)
-
-@app.route('/about')
-def about():
-    return render_template('about.html')
