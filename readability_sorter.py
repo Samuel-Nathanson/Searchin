@@ -19,24 +19,30 @@ Outputs:
 # input: api items
 
 import metrics
-import pdb 
+import pdb
+import math
+
 def getReadabilityDistance(user_reading_level, page_reading_level, dropoff_speed):
     x = page_reading_level - user_reading_level
-    return 2*math.exp(-math.pow(x,2)/(2*dropoff_speed))
+    return 1*math.exp(-math.pow(x,2)/(2*dropoff_speed))
 
 def originalIndexToRelevanceValue(index):
     return 1/(index+1)
 
 def getWeightedRelevance(original_index, readability_distance, weight):
-    pdb.set_trace()
     weighted_relevance = 2 * (((1-weight)*originalIndexToRelevanceValue(original_index)) + (weight*readability_distance))
     return weighted_relevance
 
+
+user_reading_level = 75
 weight = 0.5
 api_items = [{0: 'https://en.wikipedia.org/wiki/Coffee'}, {1: 'https://www.starbucks.com/'}, {2: 'https://www.amazon.com/coffee/s?k=coffee'}, {3: 'https://www.medicalnewstoday.com/articles/270202'}, {4: 'https://www.healthline.com/nutrition/top-13-evidence-based-health-benefits-of-coffee'}, {5: 'https://www.stumptowncoffee.com/'}, {6: 'https://www.eatthis.com/effects-of-coffee-on-body/'}, {7: 'https://www.peets.com/'}, {8: 'https://food52.com/blog/25513-putting-salt-in-coffee'}, {9: 'https://www.insider.com/former-starbucks-employee-shares-secrets-tips-and-menu-hacks'}]
 api_items_readability = []
 api_items_weighted_relevance = []
+api_items_word_counts = []
 for i,item in enumerate(api_items):
-    api_items_readability.append({i:metrics.getReadability(item)})
-    api_items_weighted_relevance.append({i:getWeightedRelevance(i,api_items_readability[i][i],weight)})
-print(api_items_readability, api_items_weighted_relevance)
+    api_items_word_counts.append({i:len(metrics.getExcerpt(item[i]))})
+    api_items_readability.append({i:metrics.getReadability(item[i])})
+    api_items_weighted_relevance.append({i:getWeightedRelevance(i,getReadabilityDistance(user_reading_level, api_items_readability[i][i], 200),weight)})
+    #pdb.set_trace()
+print(api_items_readability, api_items_weighted_relevance, api_items_word_counts)

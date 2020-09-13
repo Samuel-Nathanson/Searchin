@@ -28,7 +28,7 @@ def getReadability(url, minimum_element_length = 15, maximum_excerpt_length = 20
     payload = ""
     headers = {
         'x-rapidapi-host': "ipeirotis-readability-metrics.p.rapidapi.com",
-        'x-rapidapi-key': "{placeholder}",
+        'x-rapidapi-key': "",
         'content-type': "application/x-www-form-urlencoded"
     }
 

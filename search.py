@@ -1,6 +1,6 @@
 import json, ast
 from googleapiclient.discovery import build
-my_api_key = "{placeholder}"
+my_api_key = ""
 my_cse_id = "db4b674e75ef6e76a"
 
 def google_search(search_term, api_key, cse_id, **kwargs):
@@ -14,4 +14,7 @@ def filter_search(query):
         result = ast.literal_eval(file.read())
     result_items = [(i,x) for i,x in enumerate(result['items'])]
     api_items = [{result_item[0]:result_item[1]['link']} for result_item in result_items]
+
+
+
     print(api_items)
