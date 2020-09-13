@@ -16,6 +16,11 @@ body {
   margin: 0;
 }
 
+/*
+.topnav a.active:hover {
+  color:red;
+}*/
+
 /**
  * Add the correct display in IE 9-.
  */
@@ -35,6 +40,10 @@ section {
 h1 {
   font-size: 2em;
   margin: 0.67em 0;
+}
+
+input:focus {
+  color: #A9A9A9;
 }
 
 /* Grouping content
@@ -812,8 +821,10 @@ legend {
 
 .s009 {
   min-height: 100vh;
+  z-index: 2;
   display: -ms-flexbox;
   display: flex;
+
   -ms-flex-pack: center;
       justify-content: center;
   -ms-flex-align: center;
@@ -896,6 +907,7 @@ legend {
 
 .s009 form .inner-form .input-field .btn-search:hover, .s009 form .inner-form .input-field .btn-search:focus {
   background: #72ACF9;
+  color: purple;
 }
 
 .s009 form .inner-form .input-field .btn-delete {
