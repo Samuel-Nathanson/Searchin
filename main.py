@@ -5,9 +5,6 @@ import search_engine
 
 app = Flask(__name__)
 
-@app.route('/about')
-def about():
-    return render_template('about.html')
 
 @app.route('/contact')
 def contact():
