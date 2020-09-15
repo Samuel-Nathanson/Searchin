@@ -37,5 +37,4 @@ def api_calls(_events):
     plt.savefig("searchin-optimization-path-{}.eps".format(time.strftime('%H:%M:%S', time.gmtime(time.time()))),
         format='eps',
         dpi=100)
-    plt.show()
-
+    plt.close()
