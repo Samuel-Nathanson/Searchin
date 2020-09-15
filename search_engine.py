@@ -11,13 +11,16 @@ def google_search(search_term, api_key, cse_id, **kwargs):
 
 def filter_search(query, reading_level):
     # result_a = google_search(query, my_api_key, my_cse_id)
-    result_b = google_search(query, my_api_key, my_cse_id, num=1)
+    import time
+    t0 = time.time()
+    result_b = google_search(query, my_api_key, my_cse_id, num=10)
+    t1 = time.time()
     #with open('test.json', 'r') as file:
 #        result = ast.literal_eval(file.read())
     result_a_items = [(i,x) for i,x in enumerate(result_b['items'])]
     result_items = result_a_items
     api_items = [{result_item[0]:result_item[1]['link']} for result_item in result_items]
-    weighted_results = readability_sorter.getRelevance(api_items, reading_level, dropoff_speed=100)
+    weighted_results = readability_sorter.getRelevance(api_items, reading_level, [t0, t1-t0], dropoff_speed=100)
     #pdb.set_trace()
     weighted_results_reformat = [{'id':list(x)[0],'relevancy':x[list(x)[0]]} for x in weighted_results[1]]
     #pdb.set_trace()

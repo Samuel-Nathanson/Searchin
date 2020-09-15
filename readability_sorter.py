@@ -35,7 +35,7 @@ def getWeightedRelevance(original_index, readability_distance, weight):
     weighted_relevance = 2 * (((1-weight)*originalIndexToRelevanceValue(original_index)) + (weight*readability_distance))
     return weighted_relevance
 
-def getRelevance(api_items, user_reading_level, weight = 0.75, dropoff_speed=200):
+def getRelevance(api_items, user_reading_level, gst, weight = 0.75, dropoff_speed=200):
     api_items_readability = []
     api_items_weighted_relevance = []
 
@@ -44,7 +44,7 @@ def getRelevance(api_items, user_reading_level, weight = 0.75, dropoff_speed=200
 
     urldicts = [(x[i],i) for i,x in enumerate(api_items)]
     urllist = [x[0] for x in urldicts]
-    item_readabilities = metrics.get_readability_scores_concurrent(urllist)
+    item_readabilities = metrics.get_readability_scores_concurrent(urllist, gst)
     #pdb.set_trace()
     for item_readability in item_readabilities:
         for element in urldicts:
