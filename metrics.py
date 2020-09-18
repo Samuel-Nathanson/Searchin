@@ -55,58 +55,53 @@ def getReadabilityScore_local(excerpt, minimum_element_length = 20, minimum_exce
     return textstat.text_standard(excerpt, float_output=True)
 
 
+
 # Partner function for get_readability_scores()
 # Think of this like a wrapper
 def get_readability_scores_concurrent(urls_arr, gtime):
     return asyncio.run(get_readability_scores(urls_arr, gtime))
 
-async def consumer(queue):
-    while True:
-        # wait for an item from the producer
-        item = await queue.get()
-        # process the item
-        print('consuming item {}')
-
-    queue.task_done()
-        # simulate i/o operation using sleep
-
-async def producer(url, queue, session, minimum_element_length = 20, minimum_excerpt_length = 100, maximum_excerpt_length = 2500, coroutine_uuid=-1):
-    # Get a "work item" out of the queue.
-    import time
-    t0 = time.time()
-    try:
-        async with session.get(url, headers={
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:80.0) Gecko/20100101 Firefox/80.0'},
-                               raise_for_status=True) as resp:
-
-            text = await resp.read()
-            t_resp = time.time()
-
-            nchars = len(text)
-
-            soup = BeautifulSoup(text, 'html.parser')
-
-            excerpt = ""
-            for element in soup.find_all(["p"]):
-                clean_text = element.text.strip()
-                if len(clean_text) > minimum_element_length:  # Omit paragraphs that do not have useful info
-                    excerpt += clean_text + (" " if clean_text[-1] == "." else ". ")
-                if len(excerpt) > maximum_excerpt_length:  # Cutoff to avoid sending requests that are too large
-                    excerpt = excerpt[:maximum_excerpt_length]
-                    break
-            t_parse = time.time()
-            print("Done with task {}".format(coroutine_uuid))
-            await queue.put((excerpt,
-                    ([[t0, t_resp - t0],
-                      [t_parse, t_parse - t_resp]],
-                     url,
-                     nchars)))
-
-    except Exception as e:
-        raise Exception(e)
-
 
 async def run_async_tasks(urls_arr, session):
+    doneQueue = []
+
+    async def consumer(queue):
+        while True:
+            # wait for an item from the producer
+            item = await queue.get()
+
+        import time
+
+    async def producer(url, queue, session, minimum_element_length=20, minimum_excerpt_length=100,
+                       maximum_excerpt_length=2500, coroutine_uuid=-1):
+        # Get a "work item" out of the queue.
+        t0 = time.time()
+        try:
+            async with session.get(url, headers={
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:80.0) Gecko/20100101 Firefox/80.0'},
+                                   raise_for_status=True) as resp:
+                text = await resp.read()
+                t_resp = time.time()
+                soup = BeautifulSoup(text, 'html.parser')
+                excerpt = ""
+                for element in soup.find_all(["p"]):
+                    clean_text = element.text.strip()
+                    if len(clean_text) > minimum_element_length:  # Omit paragraphs that do not have useful info
+                        excerpt += clean_text + (" " if clean_text[-1] == "." else ". ")
+                    if len(excerpt) > maximum_excerpt_length:  # Cutoff to avoid sending requests that are too large
+                        excerpt = excerpt[:maximum_excerpt_length]
+                        break
+                t_parse = time.time()
+                print("Done with task {}".format(coroutine_uuid))
+                doneQueue.append((excerpt,
+                                 ([[t0, t_resp - t0],
+                                   [t_parse, t_parse - t_resp]],
+                                  url,
+                                  len(text))))
+
+        except Exception as e:
+            raise Exception(e)
+
     queue = asyncio.Queue()
     # fire up the both producers and consumers
     producers = [asyncio.create_task(producer(url, queue, session, coroutine_uuid=uuid.uuid1()))
@@ -116,14 +111,23 @@ async def run_async_tasks(urls_arr, session):
 
     # with both producers and consumers running, wait for
     # the producers to finish
-    await asyncio.gather(*producers)
+    t0 = time.time()
+    for fut in asyncio.as_completed(producers, timeout=2.0):
+        try:
+            await fut
+        except Exception:
+            print("Exception Occured")
+            raise Exception("Exception in readability production")
+    while(len(doneQueue) < len(urls_arr)):
+        doneQueue.append("")
 
     # wait for the remaining tasks to be processed
     await queue.join()
-
     # cancel the consumers, which are now idle
     for c in consumers:
         c.cancel()
+
+    return doneQueue
 
 # Don't call this directly!!! Use get_readability_scores_concurrent(urls_arr)
 # returns dictionary { url : readability }
@@ -141,19 +145,19 @@ async def get_readability_scores(urls_arr, g_time):
         #     time.sleep(1)
         #     print(requests_queue)
         # print("done processing {}".format(requests_queue))
-        await run_async_tasks(urls_arr, session)
+        results = await run_async_tasks(urls_arr, session)
 
     for i in range(0, len(urls_arr)):
         t0 = time.time()
-        readability_scores[urls_arr[i]] = getReadabilityScore_local(excerpts[i][0])
+        readability_scores[urls_arr[i]] = getReadabilityScore_local(results[i][0])
         t1 = time.time()
         dur = t1-t0
         print(t1-t0)
-        excerpts[i][1][0].append([t0, dur])
-        excerpts[i][1][0].append(g_time)
+        results[i][1][0].append([t0, dur])
+        results[i][1][0].append(g_time)
 
     from searchin.viz import api_calls
-    api_calls(list(map(lambda f: f[1], excerpts)))
+    api_calls(list(map(lambda f: f[1], results)))
 
     return readability_scores
 
@@ -164,7 +168,13 @@ if __name__ == "__main__":
          "https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol",
          "https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview",
          "https://www.w3schools.com/whatis/whatis_http.asp",
-         "https://www.epa.gov/"]
+         "https://www.epa.gov/",
+         "https://en.wikipedia.org/wiki/Hypertext",
+         "https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol",
+         "https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview",
+         "https://www.w3schools.com/whatis/whatis_http.asp",
+         "https://www.epa.gov/"
+         ]
     print(get_readability_scores_concurrent(a, [time.time()+3, 1.1]))
     # import matplotlib.pyplot as plt
     # import time
