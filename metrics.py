@@ -4,7 +4,36 @@ import asyncio
 from bs4 import BeautifulSoup
 import textstat
 
+def syllable_count(word):
+    word = word.lower()
+    count = 0
+    vowels = "aeiouy"
+    if word[0] in vowels:
+        count += 1
+    for index in range(1, len(word)):
+        if word[index] in vowels and word[index - 1] not in vowels:
+            count += 1
+    if word.endswith("e"):
+        count -= 1
+    if count == 0:
+        count += 1
+    return count
+
+def get_most_complex_word(excerpt):
+    import re
+
+    most_complex_word = ""
+    most_complex_word_len = 0
+    excerpt = re.sub('[^a-zA-Z]+', ' ', excerpt)
+    for word in re.split('\s+', excerpt):
+        sc = syllable_count(word)
+        if s > most_complex_word_len:
+            most_complex_word = word
+    return word
+
+
 async def fetch_excerpt(session, url, minimum_element_length = 20, minimum_excerpt_length = 100, maximum_excerpt_length = 2500):
+    complex_word = ""
     try:
         async with session.get(url, headers={
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:80.0) Gecko/20100101 Firefox/80.0'}, raise_for_status=True) as response:
@@ -21,6 +50,7 @@ async def fetch_excerpt(session, url, minimum_element_length = 20, minimum_excer
                 clean_text = element.text.strip()
                 if len(clean_text) > minimum_element_length:  # Omit paragraphs that do not have useful info
                     excerpt += clean_text + (" " if clean_text[-1] == "." else ". ")
+
                 if len(excerpt) > maximum_excerpt_length:  # Cutoff to avoid sending requests that are too large
                     excerpt = excerpt[:maximum_excerpt_length]
                     break
@@ -53,6 +83,8 @@ async def get_readability_scores(urls_arr):
         excerpts = await asyncio.gather(*tasks)
     for i in range(0, len(urls_arr)):
         readability_scores[urls_arr[i]] = getReadabilityScore_local(excerpts[i])
+    for i in range(0, len(urls_arr)):
+        print("{}:{}".format(urls_arr[i], get_most_complex_word(excerpts[i])))
 
     return readability_scores
 
