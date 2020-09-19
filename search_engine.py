@@ -55,7 +55,6 @@ def search_result_formatter(result_items):
         formatted_result['relevancy'] = round(x[2], 2)
         formatted_result['score'] = x[3]
         results.append(formatted_result)
-    print(time.time())
     return results
 #if __name__ == '__main__':
     #search_result_formatter(filter_search('coffee'))

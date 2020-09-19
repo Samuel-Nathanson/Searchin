@@ -5,6 +5,8 @@ from bs4 import BeautifulSoup
 import textstat
 
 def syllable_count(word):
+    if(word == ""):
+        return 0
     word = word.lower()
     count = 0
     vowels = "aeiouy"
@@ -24,12 +26,13 @@ def get_most_complex_word(excerpt):
 
     most_complex_word = ""
     most_complex_word_len = 0
-    excerpt = re.sub('[^a-zA-Z]+', ' ', excerpt)
+    excerpt = re.sub('[^a-zA-Z\-]+', ' ', excerpt)
     for word in re.split('\s+', excerpt):
         sc = syllable_count(word)
-        if s > most_complex_word_len:
+        if sc > most_complex_word_len:
             most_complex_word = word
-    return word
+            most_complex_word_len = sc
+    return most_complex_word
 
 
 async def fetch_excerpt(session, url, minimum_element_length = 20, minimum_excerpt_length = 100, maximum_excerpt_length = 2500):
@@ -84,19 +87,20 @@ async def get_readability_scores(urls_arr):
     for i in range(0, len(urls_arr)):
         readability_scores[urls_arr[i]] = getReadabilityScore_local(excerpts[i])
     for i in range(0, len(urls_arr)):
-        print("{}:{}".format(urls_arr[i], get_most_complex_word(excerpts[i])))
+        print("{} : {}".format(urls_arr[i], get_most_complex_word(excerpts[i])))
 
     return readability_scores
 
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
 #     import matplotlib.pyplot as plt
 #     import time
 #     x_vals = []
 #     y_vals = []
 #     for i in range(1,100,10):
 #         t0 = time.time()
-#         a = ["https://en.wikipedia.org/wiki/Hypertext"] * i
+    a = ["https://en.wikipedia.org/wiki/Hypertext"] * 5
+    get_readability_scores_concurrent(a)
 #         print(get_readability_scores_concurrent(a))
 #         t1 = time.time()
 #         x_vals.append(i)
