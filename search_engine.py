@@ -1,7 +1,7 @@
 import ast, operator
 import readability_sorter
 from googleapiclient.discovery import build
-my_api_key = "AIzaSyDmu3YKcV0wXQqugY3-oC3y-Z5u3w99M6g"
+my_api_key = ""
 my_cse_id = "db4b674e75ef6e76a"
 
 def google_search(search_term, api_key, cse_id, **kwargs):
