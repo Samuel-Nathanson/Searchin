@@ -14,7 +14,8 @@ Make sure that CORS Unblock is enabled by clicking the icon in the extensions to
 
 ```git clone https://github.com/Samuel-Nathanson/searchin.git
 
-cd searchin/searchin-extension```
+cd searchin/searchin-extension
+```
 
 ### Install Required Packages
 
@@ -33,6 +34,6 @@ You should now see Searchin' in the list of Chrome Extensions. Make sure it's en
 
 Now, perform any Google Search -- If Searchin' is configured correctly, then you should see a Grade Level score next to each of the Google Search results.
 
-![searchinScores](./searchin-extension/images/searchinScores.png)
+![searchinScores](searchinScores.png)
 
 
