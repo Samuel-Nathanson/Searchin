@@ -5,7 +5,7 @@ Web Readability Scoring
 
 ### Add the [CORS Unblock Extension](https://chrome.google.com/webstore/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino?hl=en) to Chrome
 Make sure that CORS Unblock is enabled by clicking the icon in the extensions toolbar -- It should look like this:
-![Cors Unblock Icon](./searchin-extension/images/corsUnblock.png)
+![Cors Unblock Icon](../searchin-extension/images/corsUnblock.png)
 
 **Don't want to install a CORS Unblock extension on the Chrome you use every day? You can download the developer version of Chrome, [Chrome Canary](https://www.google.com/intl/en/chrome/canary/?brand=KERZ#eula).**
 
