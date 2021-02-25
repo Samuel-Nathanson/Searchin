@@ -1,0 +1,16 @@
+{
+  "name": "searchin",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {},
+  "scripts": {
+    "build": "$(npm bin)/browserify src/content.js > src/searchin.js"
+  },
+  "devDependencies": {
+    "flesch-kincaid": "^1.0.5",
+    "axios": "^0.21.1",
+    "browserify": "^17.0.0",
+    "jssoup": "0.0.12"
+  }
+}
