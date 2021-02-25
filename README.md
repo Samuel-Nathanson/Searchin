@@ -12,7 +12,8 @@ Make sure that CORS Unblock is enabled by clicking the icon in the extensions to
 
 ### Clone this repository 
 
-```git clone https://github.com/Samuel-Nathanson/searchin.git
+```
+git clone https://github.com/Samuel-Nathanson/searchin.git
 
 cd searchin/searchin-extension
 ```
