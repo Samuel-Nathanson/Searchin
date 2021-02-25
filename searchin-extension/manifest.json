@@ -1,0 +1,31 @@
+{
+  "manifest_version": 2,
+  "name": "Searchin'",
+  "description": "Searchin' is a Chrome extension that provides better search results, based on reading level",
+  "version": "0.0.3",
+  "browser_action": {
+    "default_popup": "src/index.html",
+    "default_title": "More Information on Searchin'"
+  },
+  "icons": {
+    "16": "images/LeafLogo128x128.png",
+    "48": "images/LeafLogo128x128.png",
+    "128": "images/LeafLogo128x128.png"
+  },
+  "permissions": [
+    "https://google.com/"
+  ],
+  "content_scripts": [
+    {
+      "css": [
+        "src/styles.css"
+      ],
+      "js": [
+        "src/searchin.js"
+      ],
+      "matches": [
+        "https://www.google.com/search*"
+      ]
+    }
+  ]
+}
