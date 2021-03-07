@@ -40,7 +40,6 @@ function updateSearchResults(gElement, searchinScore) {
         return;
     }
 
-    console.log(webInfo.innerHTML)
     webInfo.innerHTML = `<span id="searchinScore" style="right: 0;position: absolute; color:#5F6368; padding-top:3px"><i> Grade Level: ${searchinScore}</i></span>` + webInfo.innerHTML;
 
     // var summary = searchResults[i].querySelectorAll('div')[0].querySelectorAll(':scope > div')[1].querySelectorAll('span')[0];

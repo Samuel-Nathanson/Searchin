@@ -1167,4 +1167,3 @@ const require = createRequire(import.meta.url);
 var JSSoup = require('jssoup').default;
 var soup = new JSSoup(content);
 var ps = soup.findAll('p')
-console.log(ps[0].text)

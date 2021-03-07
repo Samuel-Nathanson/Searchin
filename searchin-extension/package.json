@@ -5,7 +5,7 @@
   "type": "module",
   "dependencies": {},
   "scripts": {
-    "build": "$(npm bin)/browserify src/content.js > src/searchin.js"
+    "build": "build.js"
   },
   "devDependencies": {
     "flesch-kincaid": "^1.0.5",

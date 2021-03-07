@@ -1619,132 +1619,33 @@ var SoupStrainer = function () {
   return SoupStrainer;
 }();
 },{"./builder.js":2,"htmlparser":1}],4:[function(require,module,exports){
-/**
- * Get HTML asynchronously
- * @param  {String}   url      The URL to get HTML from
- * @param  {Function} callback A callback funtion. Pass in "response" variable to use returned HTML.
- */
-var getHTML = function (url, callback) {
-
-    function callback(response) {
-        return response.documentElement();
-    }
-
-    // Feature detection
-    if (!window.XMLHttpRequest) return;
-
-    // Create new request
-    var xhr = new XMLHttpRequest();
-
-    // Setup callback
-    xhr.onload = function () {
-        if (callback && typeof (callback) === 'function') {
-            callback(this.responseXML);
-        }
-    }
-
-    // Get the HTML
-    xhr.open('GET', url);
-    xhr.responseType = 'document';
-    xhr.send();
-};
-
-module.exports = getHTML
-},{}],5:[function(require,module,exports){
 const getScores = require('./readabilityScorer.js');
-const getHTML = require('./URLReader.js');
 const getTextContent = require('./pageParser.js');
+console.log('onConnect');
 
-const searchResults = document.getElementsByClassName('g');
+chrome.runtime.onConnect.addListener((port) => {
+    port.onMessage.addListener((msg) => {
+        if (msg.function == 'features') {
 
-function isSearchResult(gElement) {
-    // Check is/is not a search result
-    if (gElement.querySelectorAll('h3').length > 0) {
-        if (gElement.querySelectorAll('h3')[0].innerText === "") {
-            // This is not a search result
-            return false;
+            const bodyText = new XMLSerializer().serializeToString(document.body);
+
+            const parsedText = getTextContent(bodyText);
+
+            const readabilityScore = getScores(parsedText)
+
+            const searchinScore = readabilityScore.medianGrade;
+
+            port.postMessage({
+                'searchinScore': searchinScore,
+                'feature2': 'f2',
+                'feature3': 'f3'
+            });
         }
-    } else {
-        return false;
-    }
-    return true;
-}
+    });
+});
 
-function modifyTooltip(gElement) {
-    gElement.querySelectorAll('h3')[0].title = 'Searchin\' Tooltip'
-}
 
-function getURL(gElement) {
-    var webInfo = gElement.querySelectorAll(':scope > div')[0].querySelectorAll(':scope > div')[0];
-    var anchors = webInfo.querySelectorAll(':scope > a');
-    let link = '';
-    if (anchors.length > 0) {
-        link = anchors[0].href;
-        return link
-    }
-    return '';
-}
-
-function updateSearchResults(gElement, searchinScore) {
-    try {
-        var webInfo = gElement.querySelectorAll(':scope > div')[0].querySelectorAll(':scope > div')[0];
-    } catch (e) {
-        console.error(`Couldn't get webInfo for ${gElement}`);
-        return;
-    }
-
-    webInfo.innerHTML = `<span id="searchinScore" style="right: 0;position: absolute; color:#5F6368; padding-top:3px"><i> Grade Level: ${searchinScore}</i></span>` + webInfo.innerHTML;
-
-    // var summary = searchResults[i].querySelectorAll('div')[0].querySelectorAll(':scope > div')[1].querySelectorAll('span')[0];
-    // summary.innerHTML = summary.innerHTML + `<span><i> Grade Level: ${readabilityScore}</i></span>`;
-
-    // var summary2 = searchResults[i + 1].querySelectorAll('div')[0].querySelectorAll(':scope > div')[1].querySelectorAll('span')[0];
-    // summary2.innerHTML = summary2.innerHTML + `<p><i> Grade Level: ${readabilityScore}</i></p>`;
-
-    // break;
-}
-
-for (var i = 0, l = searchResults.length; i < l; i++) {
-
-    if (!isSearchResult(searchResults[i])) {
-        continue;
-    }
-
-    modifyTooltip(searchResults[i]);
-
-    const searchResultURL = getURL(searchResults[i]);
-
-    // Feature detection
-    if (!window.XMLHttpRequest) return;
-
-    // Create new request
-    var xhr = new XMLHttpRequest();
-
-    // Setup callback
-    xhr.onload = function () {
-
-        const bodyText = new XMLSerializer().serializeToString(this.responseXML.body);
-
-        const parsedText = getTextContent(bodyText);
-
-        const readabilityScore = getScores(parsedText)
-
-        const searchinScore = readabilityScore.medianGrade;
-
-        updateSearchResults(searchResults[this.gElementIdx], searchinScore);
-    }
-
-    // Get the HTML
-    xhr.open('GET', searchResultURL);
-    xhr.gElementIdx = i;
-    xhr.responseType = 'document';
-    xhr.send();
-
-    // Set up loading spinner
-    // Async getReadabilityScore
-    // then, call to innerHTML
-}
-},{"./URLReader.js":4,"./pageParser.js":6,"./readabilityScorer.js":7}],6:[function(require,module,exports){
+},{"./pageParser.js":5,"./readabilityScorer.js":6}],5:[function(require,module,exports){
 // nodejs
 var JSSoup = require('jssoup').default;
 
@@ -1776,7 +1677,7 @@ function getTextContent(htmlContent) {
 }
 
 module.exports = getTextContent;
-},{"jssoup":3}],7:[function(require,module,exports){
+},{"jssoup":3}],6:[function(require,module,exports){
 var getScores = function (text) {
 
     /* 
@@ -2098,4 +1999,4 @@ var getScores = function (text) {
 };
 
 module.exports = getScores;
-},{}]},{},[5]);
+},{}]},{},[4]);
