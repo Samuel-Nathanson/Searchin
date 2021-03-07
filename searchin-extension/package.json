@@ -2,10 +2,10 @@
   "name": "searchin",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
+  "type": "commonjs",
   "dependencies": {},
   "scripts": {
-    "build": "build.js"
+    "build": "node scripts/build.js && scripts/minify"
   },
   "devDependencies": {
     "flesch-kincaid": "^1.0.5",

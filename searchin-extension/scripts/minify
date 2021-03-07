@@ -1,0 +1,2 @@
+$(npm bin)/browserify build/content.js > src/searchin.js
+$(npm bin)/browserify build/feature-extractor.js > src/searchin-fex.js

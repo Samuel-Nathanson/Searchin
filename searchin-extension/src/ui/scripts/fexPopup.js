@@ -79,5 +79,5 @@ function downloadFeatures(level) {
                 localStorage.numLabeled = Number(1);
             }
         }
-    }, 1000);
+    }, 500);
 }

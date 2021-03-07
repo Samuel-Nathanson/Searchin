@@ -4,7 +4,7 @@
   "description": "Searchin' is a Chrome extension that provides better search results, based on reading level",
   "version": "0.0.3",
   "browser_action": {
-    "default_popup": "src/ui/index.html",
+    "default_popup": "build/ui/index.html",
     "default_title": "More Information on Searchin'"
   },
   "icons": {
@@ -18,10 +18,10 @@
   "content_scripts": [
     {
       "css": [
-        "src/styles.css"
+        "build/styles.css"
       ],
       "js": [
-        "src/searchin.js"
+        "build/searchin.js"
       ],
       "matches": [
         "https://www.google.com/search*"
@@ -29,7 +29,7 @@
     },
     {
       "js": [
-        "src/searchin-fex.js"
+        "build/searchin-fex.js"
       ],
       "matches": [
         "https://*/*"
