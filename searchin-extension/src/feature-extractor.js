@@ -1,6 +1,5 @@
 const getScores = require('./readabilityScorer.js');
 const getTextContent = require('./pageParser.js');
-console.log('onConnect');
 
 chrome.runtime.onConnect.addListener((port) => {
     port.onMessage.addListener((msg) => {
@@ -22,4 +21,3 @@ chrome.runtime.onConnect.addListener((port) => {
         }
     });
 });
-

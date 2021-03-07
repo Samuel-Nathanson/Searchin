@@ -19,7 +19,11 @@ body {
       color: white;
   }
 
-  errorsDiv {
+  #errorsDiv {
       font-size: 85%;
       padding-bottom: 1rem;
+  }
+
+  #container {
+    margin-top: 13px;
   }
