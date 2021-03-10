@@ -5,7 +5,8 @@
   "type": "commonjs",
   "dependencies": {},
   "scripts": {
-    "build": "node scripts/build.js && scripts/minify"
+    "build": "node scripts/build.js && scripts/minify",
+	"clean": "rm -rf build/"
   },
   "devDependencies": {
     "flesch-kincaid": "^1.0.5",

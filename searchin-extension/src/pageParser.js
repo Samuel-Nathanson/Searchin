@@ -1,16 +1,8 @@
-// nodejs
 var JSSoup = require('jssoup').default;
 
 const minimumUsefulParagraphLength = 20;
 
 function getTextContent(htmlContent) {
-
-    //     var data = `
-    // <div>
-    //   <div class="h1"></div>
-    //   <a>hello</a>
-    // </div>
-    // `
 
     const soup = new JSSoup(htmlContent);
 
