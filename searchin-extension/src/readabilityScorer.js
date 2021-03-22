@@ -1,5 +1,9 @@
 var getScores = function (text) {
 
+    if (text.length < 100) {
+        return {};
+    }
+
     /* 
      * To speed the script up, you can set a sampling rate in words. For example, if you set
      * sampleLimit to 1000, only the first 1000 words will be parsed from the input text.

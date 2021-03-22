@@ -109,9 +109,9 @@ chrome.runtime.onConnect.addListener((port) => {
 
             const parsedText = getTextContent(bodyText);
 
-            const readabilityScore = getScores(parsedText)
+            const readabilityScore = getScores(parsedText);
 
-            const searchinScore = readabilityScore.medianGrade;
+            const searchinScore = readabilityScore.medianGrade ? readabilityScore.medianGrade : -1;
 
             port.postMessage({
                 'searchinScore': searchinScore,
