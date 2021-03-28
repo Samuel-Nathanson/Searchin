@@ -1,5 +1,6 @@
 const getScores = require('./readabilityScorer.js');
 const getTextContent = require('./pageParser.js');
+var JSSoup = require('jssoup').default;
 
 function css(el) {
     var sheets = document.styleSheets, ret = [];
@@ -93,6 +94,74 @@ function getContrastRatio() {
     const fcY = calculateLuminance(fc);
     const bgcY = calculateLuminance(bgc);
     return calculateContrastRatio(fcY, bgcY);
+}
+
+function get_tag_counts(html) {
+    // Enumerate these because we want 0's in final output
+    tags = {
+        'u': 0,
+        'i': 0,
+        'b': 0,
+        'em': 0,
+        'mark': 0,
+        'strong': 0,
+        'small': 0,
+        'del': 0,
+        'ins': 0,
+        'sub': 0,
+        'sup': 0,
+        'audio': 0,
+        'video': 0,
+        'cite': 0,
+        'code': 0,
+        'figure': 0,
+        'img': 0
+    }
+
+    let total = 1
+
+    const soup = new JSSoup(html);
+    const elements = soup.findAll();
+    console.log(elements);
+    elements.forEach((e) => {
+        if (e.name in tags) {
+            tags[e.name] += 1;
+        }
+    });
+
+    // Consolidate like tags
+    tags['b'] = tags['b'] + tags['strong']
+    delete tags['strong']
+
+    tags['i'] = tags['i'] + tags['em']
+    delete tags['em']
+
+    tags['img'] = tags['img'] + tags['figure']
+    delete tags['figure']
+
+    for (const [key, value] of Object.entries(tags)) {
+        tags[key] = value / total;
+    }
+
+    return tags
+}
+
+function count_punctuation(excerpt) {
+    let punctuation = 0
+
+    // Assuming that excerpt does not contain tags
+
+    const rawString = String.raw`!"#$%&'()*+,-./:;<=>?@[\]^_\`{|}~`;
+
+    console.log(rawString);
+    excerpt.split('').forEach(i => {
+        if (rawString.includes(i)) {
+            console.log(i)
+            punctuation += 1
+        }
+    });
+
+    return punctuation / excerpt.length
 }
 
 chrome.runtime.onConnect.addListener((port) => {
