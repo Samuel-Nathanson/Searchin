@@ -19,19 +19,16 @@ const minimumUsefulParagraphLength = 20;
 //     return true;
 // }
 
-function getTextContent(htmlContent) {
+function getTextContent(rawText) {
 
-    const soup = new JSSoup(htmlContent);
 
-    const paragraphs = soup.findAll(['h1', 'p', 'h2', 'h3', 'h4']);
-    let textContent = "";
+    let textContent = rawText.trim();
 
-    for (let i = 0; i < paragraphs.length; i++) {
-        let trimmedParagraph = paragraphs[i].text.trim();
-        if (trimmedParagraph.length > minimumUsefulParagraphLength) {
-            textContent += trimmedParagraph + (trimmedParagraph[trimmedParagraph.length - 1] === "." ? " " : ". ");
-        }
-    }
+    // Clean Text Content
+    textContent = textContent.replace('\n', '. ');
+    textContent = textContent.replace('\t', '');
+    textContent = textContent.replace('\r', '');
+
     // Low number of characters
     if (textContent.length < 100) {
         return "";

@@ -8,9 +8,13 @@ const searchResults = document.getElementsByClassName('g');
 function isSearchResult(gElement) {
     // Check is/is not a search result
     if (gElement.querySelectorAll('h3').length > 0) {
-        if (gElement.querySelectorAll('h3')[0].innerText === "") {
-            // This is not a search result
-            return false;
+        try {
+            if (gElement.querySelectorAll('h3')[0].innerText === "") {
+                // This is not a search result
+                return false;
+            }
+        } catch (e) {
+            console.log(e);
         }
     } else {
         return false;
@@ -19,7 +23,11 @@ function isSearchResult(gElement) {
 }
 
 function modifyTooltip(gElement) {
-    gElement.querySelectorAll('h3')[0].title = 'Searchin\' Tooltip'
+    try {
+        gElement.querySelectorAll('h3')[0].title = 'Searchin\' Tooltip'
+    } catch (e) {
+        console.log(e);
+    }
 }
 
 function getURL(gElement) {
@@ -76,7 +84,8 @@ function updateSearchResults(gElement, searchinScore) {
     var lineHeight = window.getComputedStyle(gElement, null).getPropertyValue('line-height').replace("px", "");
 
     if (searchinScore === -1) {
-        webInfo.innerHTML = `<span id="searchinScore" style="right: ${isCarosel ? "50px" : "0px"};position: absolute; color:#5F6368; padding-top:3px; font-size: small"><img src="data:image/png;base64,${leafLogo}" height="${lineHeight}" width="${lineHeight}" alt="Searchin' logo" title="Searchin' could not provide a readability score for this page." /></span>` + webInfo.innerHTML;
+        const img = `<img src="data:image/png;base64,${leafLogo}" height="${lineHeight}" width="${lineHeight}" alt="Searchin' logo" title="Searchin' could not provide a readability score for this page." />`
+        webInfo.innerHTML = `<span id="searchinScore" style="right: ${isCarosel ? "50px" : "0px"};position: absolute; color:#5F6368; padding-top:3px; font-size: small">Grade Level: N/A</span>` + webInfo.innerHTML;
     } else {
         webInfo.innerHTML = `<span id="searchinScore" style="right: ${isCarosel ? "50px" : "0px"};position: absolute; color:#5F6368; font-size: small; padding-top:3px"><i> Grade Level: ${searchinScore}</i></span>` + webInfo.innerHTML;
     }
@@ -106,11 +115,9 @@ for (var i = 0, l = searchResults.length; i < l; i++) {
 
     // Setup callback
     xhr.onload = function () {
+        const parsedText = getTextContent(this.responseXML.body.textContent);
 
-        const bodyText = new XMLSerializer().serializeToString(this.responseXML.body);
-
-        const parsedText = getTextContent(bodyText);
-
+        // Currently, this won't work! We need to extract the innerText from the HTML, but it's currently providing unknown results.
         const readabilityScore = getScores(parsedText)
 
         const searchinScore = readabilityScore.medianGrade ? readabilityScore.medianGrade : -1;

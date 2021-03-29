@@ -96,7 +96,9 @@ function getContrastRatio() {
     return calculateContrastRatio(fcY, bgcY);
 }
 
-function get_tag_counts(html) {
+function getTagCounts() {
+
+    html = document.body;
     // Enumerate these because we want 0's in final output
     tags = {
         'u': 0,
@@ -122,7 +124,6 @@ function get_tag_counts(html) {
 
     const soup = new JSSoup(html);
     const elements = soup.findAll();
-    console.log(elements);
     elements.forEach((e) => {
         if (e.name in tags) {
             tags[e.name] += 1;
@@ -146,17 +147,18 @@ function get_tag_counts(html) {
     return tags
 }
 
-function count_punctuation(excerpt) {
+function countPunctuation() {
+
+    excerpt = document.body.innerText;
+
     let punctuation = 0
 
     // Assuming that excerpt does not contain tags
 
     const rawString = String.raw`!"#$%&'()*+,-./:;<=>?@[\]^_\`{|}~`;
 
-    console.log(rawString);
     excerpt.split('').forEach(i => {
         if (rawString.includes(i)) {
-            console.log(i)
             punctuation += 1
         }
     });
@@ -174,15 +176,23 @@ chrome.runtime.onConnect.addListener((port) => {
 
             const contrastRatio = getContrastRatio();
 
-            const bodyText = new XMLSerializer().serializeToString(document.body);
+            const tagCounts = getTagCounts();
 
-            const parsedText = getTextContent(bodyText);
+            const punctuation = countPunctuation()
+
+            // const bodyText = new XMLSerializer().serializeToString(document.body);
+
+            // const parsedText = getTextContent(bodyText);
+
+            const parsedText = document.body.innerText;
 
             const readabilityScore = getScores(parsedText);
 
             const searchinScore = readabilityScore.medianGrade ? readabilityScore.medianGrade : -1;
 
             port.postMessage({
+                'tagCountsPct': tagCounts,
+                'punctuationPct': punctuation,
                 'searchinScore': searchinScore,
                 'fontSize': fontSize,
                 'fontStyle': fontStyle,

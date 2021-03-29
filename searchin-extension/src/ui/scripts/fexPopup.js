@@ -3,9 +3,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
 });
 
 function setOnClickActions() {
-    document.getElementById('professionalButton').onclick = function (e) {
-        downloadFeatures(5);
-    };
     document.getElementById('graduateButton').onclick = function (e) {
         downloadFeatures(4);
     };
@@ -30,11 +27,9 @@ function downloadFeatures(level) {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         if (chrome.runtime.lastError) {
             // Something went wrong
-            alert('Searchin Issue - #0')
-            // Maybe explain that to the user too?
+            alert('Searchin Error (0). Contact snatha11@jh.edu')
         }
         try {
-
             url = tabs[0].url;
             const port = chrome.tabs.connect(tabs[0].id);
             port.postMessage({ function: 'features' });
@@ -79,5 +74,5 @@ function downloadFeatures(level) {
                 localStorage.numLabeled = Number(1);
             }
         }
-    }, 500);
+    }, 1500);
 }
