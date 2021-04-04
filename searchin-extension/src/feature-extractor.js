@@ -188,7 +188,7 @@ chrome.runtime.onConnect.addListener((port) => {
 
             const readabilityScore = getScores(parsedText);
 
-            const searchinScore = readabilityScore.medianGrade ? readabilityScore.medianGrade : -1;
+            const searchinScore = readabilityScore;
 
             port.postMessage({
                 'tagCountsPct': tagCounts,
