@@ -1,7 +1,7 @@
 const getScores = require('./readabilityScorer.js');
 const getHTML = require('./URLReader.js');
 const leafLogo = require('./LeafLogo');
-const getTextContent = require('./pageParser.js');
+const { getTextContent, getParagraphContent } = require('./pageParser.js');
 
 const searchResults = document.getElementsByClassName('g');
 
@@ -115,12 +115,23 @@ for (var i = 0, l = searchResults.length; i < l; i++) {
 
     // Setup callback
     xhr.onload = function () {
-        const parsedText = getTextContent(this.responseXML.body.textContent);
 
-        // Currently, this won't work! We need to extract the innerText from the HTML, but it's currently providing unknown results.
-        const readabilityScore = getScores(parsedText)
+        const textContent = getTextContent(this.responseXML.body.outerHTML);
+        const paragraphContent = getParagraphContent(this.response.body);
 
-        const searchinScore = readabilityScore.medianGrade ? readabilityScore.medianGrade : -1;
+        const readabilityScore1 = getScores(textContent)
+        const readabilityScore2 = getScores(paragraphContent)
+
+        let searchinScore = -1;
+        if (readabilityScore1.medianGrade && readabilityScore2.medianGrade) {
+            searchinScore = Math.min(readabilityScore1.medianGrade, readabilityScore2.medianGrade);
+        }
+        else if (!(readabilityScore1.medianGrade || readabilityScore2.medianGrade)) {
+            searchinScore = -1;
+        }
+        else {
+            searchinScore = readabilityScore1.medianGrade | readabilityScore2.medianGrade
+        }
 
         updateSearchResults(searchResults[this.gElementIdx], searchinScore);
     }
