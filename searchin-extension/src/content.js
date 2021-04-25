@@ -38,7 +38,7 @@ function getURL(gElement) {
         if (gElement.querySelectorAll(':scope > div').length > 0) {
             if (gElement.querySelectorAll(':scope > div')[0].querySelectorAll(':scope > div').length > 0) {
                 webInfo = gElement.querySelectorAll(':scope > div')[0].querySelectorAll(':scope > div')[0];
-                anchors = webInfo.querySelectorAll(':scope > a');
+                anchors = webInfo.querySelectorAll('a');
                 if (anchors.length > 0) {
                     link = anchors[0].href;
                     return link
@@ -115,25 +115,14 @@ for (var i = 0, l = searchResults.length; i < l; i++) {
 
     // Setup callback
     xhr.onload = function () {
+        const paragraphText = new XMLSerializer().serializeToString(this.responseXML.body);
 
-        const textContent = getTextContent(this.responseXML.body.outerHTML);
-        const paragraphContent = getParagraphContent(this.response.body);
+        // const textContent = getTextContent(this.responseXML.body.outerHTML);
+        const paragraphContent = getParagraphContent(paragraphText);
 
-        const readabilityScore1 = getScores(textContent)
-        const readabilityScore2 = getScores(paragraphContent)
+        const searchinScore = getScores(paragraphContent);
 
-        let searchinScore = -1;
-        if (readabilityScore1.medianGrade && readabilityScore2.medianGrade) {
-            searchinScore = Math.min(readabilityScore1.medianGrade, readabilityScore2.medianGrade);
-        }
-        else if (!(readabilityScore1.medianGrade || readabilityScore2.medianGrade)) {
-            searchinScore = -1;
-        }
-        else {
-            searchinScore = readabilityScore1.medianGrade | readabilityScore2.medianGrade
-        }
-
-        updateSearchResults(searchResults[this.gElementIdx], searchinScore);
+        updateSearchResults(searchResults[this.gElementIdx], searchinScore.medianGrade);
     }
 
     // Get the HTML

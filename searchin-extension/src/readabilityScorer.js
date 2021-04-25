@@ -1,7 +1,7 @@
 var getScores = function (text) {
 
     if (text.length < 100) {
-        return {};
+        return { medianGrade: -1 };
     }
 
     /* 
