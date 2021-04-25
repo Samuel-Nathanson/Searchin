@@ -120,9 +120,10 @@ function getTagCounts() {
         'img': 0
     }
 
+    console.log(tags);
     let total = 1
 
-    const soup = new JSSoup(html);
+    const soup = new JSSoup(html.innerHTML);
     const elements = soup.findAll();
     elements.forEach((e) => {
         if (e.name in tags) {
