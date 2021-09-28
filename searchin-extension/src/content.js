@@ -3,7 +3,14 @@ const getHTML = require('./URLReader.js');
 const leafLogo = require('./LeafLogo');
 const { getTextContent, getParagraphContent } = require('./pageParser.js');
 
-const searchResults = document.getElementsByClassName('g');
+// Gets top and left offset of element, used for positioning tooltips
+function getOffset(el) {
+    const rect = el.getBoundingClientRect();
+    return {
+        left: rect.left + window.scrollX,
+        top: rect.top + window.scrollY
+    };
+}
 
 function isSearchResult(gElement) {
     // Check is/is not a search result
@@ -20,6 +27,13 @@ function isSearchResult(gElement) {
         return false;
     }
     return true;
+}
+
+function shouldDisplayTooltip(gElement) {
+    isResult = isSearchResult(gElement)
+    isSubresult = (gElement.classList.length !== 1)
+
+    return isResult && !isSubresult;
 }
 
 function modifyTooltip(gElement) {
@@ -62,7 +76,13 @@ function getURL(gElement) {
 
 function updateSearchResults(gElement, searchinScore) {
     var webInfo;
-    var isCarosel = false;
+
+    parentWidth = gElement.parentElement.offsetWidth
+    childWidth = gElement.offsetWidth
+
+    // rightOffset = childWidth - parentWidth
+    rightOffset = `0px`
+
     try {
         if (gElement.querySelectorAll(':scope > div').length > 0) {
             if (gElement.querySelectorAll(':scope > div')[0].querySelectorAll(':scope > div').length > 0) {
@@ -72,7 +92,6 @@ function updateSearchResults(gElement, searchinScore) {
             if (gElement.querySelectorAll('g-link').length > 0) {
                 if (gElement.querySelectorAll('g-link')[0].querySelectorAll(':scope > a').length > 0) {
                     webInfo = gElement.querySelectorAll('g-link')[0];
-                    isCarosel = true;
                 }
             }
         }
@@ -81,23 +100,51 @@ function updateSearchResults(gElement, searchinScore) {
         console.error(`Couldn't get webInfo for ${gElement}`);
         return;
     }
-    var lineHeight = window.getComputedStyle(gElement, null).getPropertyValue('line-height').replace("px", "");
 
     if (searchinScore === -1) {
-        const img = `<img src="data:image/png;base64,${leafLogo}" height="${lineHeight}" width="${lineHeight}" alt="Searchin' logo" title="Searchin' could not provide a readability score for this page." />`
-        webInfo.innerHTML = `<span id="searchinScore" style="right: ${isCarosel ? "50px" : "0px"};position: absolute; color:#5F6368; padding-top:3px; font-size: small">Grade Level: N/A</span>` + webInfo.innerHTML;
+        // const img = `<img src="data:image/png;base64,${leafLogo}" height="${lineHeight}" width="${lineHeight}" alt="Searchin' logo" title="Searchin' could not provide a readability score for this page." />`
+        webInfo.innerHTML = `<span id="searchinScore" style="right: ${rightOffset};position: absolute; color:#5F6368; padding-top:3px; font-size: small">Grade Level: N/A</span>` + webInfo.innerHTML;
     } else {
-        webInfo.innerHTML = `<span id="searchinScore" style="right: ${isCarosel ? "50px" : "0px"};position: absolute; color:#5F6368; font-size: small; padding-top:3px"><i> Grade Level: ${searchinScore}</i></span>` + webInfo.innerHTML;
+        webInfo.innerHTML = `<span id="searchinScore" style="right: ${rightOffset};position: absolute; color:#5F6368; font-size: small; padding-top:3px"><i> Grade Level: ${searchinScore}</i></span>` + webInfo.innerHTML;
     }
+
+    searchinElement = webInfo.querySelector('span')
+
+    if (typeof updateSearchResults.firstOffset == 'undefined') {
+        updateSearchResults.firstOffset = getOffset(searchinElement);
+    } else {
+        gElementLeftOffset = getOffset(searchinElement).left
+        if (gElementLeftOffset !== updateSearchResults.firstOffset.left) {
+            searchinElement.style.right = `${gElementLeftOffset - updateSearchResults.firstOffset.left}px`
+        }
+    }
+
+    // If offset does not match, then set offset to first offset
+
 }
 
-for (var i = 0, l = searchResults.length; i < l; i++) {
+const searchResults = document.getElementsByClassName('g');
+skipThese = []; // Elements can not be removed from an HTMLCollection returned by searchResults without removing the elements from the DOM
 
-    if (!isSearchResult(searchResults[i])) {
+for (var i = 0; i < searchResults.length; i++) {
+
+    if (skipThese.includes(i)) {
         continue;
     }
 
-    modifyTooltip(searchResults[i]);
+    // Remove child elements
+    for (j = i + 1; j < searchResults.length; j++) {
+        if (searchResults[i].contains(searchResults[j])) {
+            skipThese.push(j)
+        }
+    }
+
+    if (!shouldDisplayTooltip(searchResults[i])) {
+        continue;
+    } else {
+        modifyTooltip(searchResults[i]);
+    }
+
 
     let searchResultURL = '';
     try {
