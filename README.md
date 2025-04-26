@@ -1,5 +1,8 @@
 # searchin
+
 Web Readability Scoring
+
+Note - In the 5 years since we started this project, there have been numerous game-changing advancements in natural language processing, most of which enable our goal of custom-tailored education for those who need it. Our time working on Searchin' yielded excellent results, including presenting at JHU's alumni association and publishing our work in JHU's campus newsletter. Ultimately, however, AI education and search tools have advanced far beyond readability scoring on web results - Now, LLMs can provide custom-tailored responses to any user -- This progress is great, and it also means we no longer need to continue development on Searchin'.    
 
 # Development Environment for Chrome Extension 
 
